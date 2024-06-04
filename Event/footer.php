@@ -66,9 +66,9 @@ oci_close($connection);
                 <li><?php echo htmlspecialchars($sponsor); ?></li>
             <?php endforeach; ?>
         </ul>
-        <p>&copy; <?php echo date('Y'); ?> Your College Name. All rights reserved.</p>
-        <p>Contact Us: info@yourcollege.edu | +1 234 567 8900</p>
-        <p>Address: 123 College St, City, State, ZIP Code</p>
+        <p>&copy; <?php echo date('Y'); ?> PUDUCHERRY TECHNOLOGICAL UNIVERSITY. All rights reserved.</p>
+        <p>Contact Us: info@ptuniv.edu.in | 0413-2655281-288</p>
+        <p>Address: East coast Road, Pillaichavady, Puducherry, 605 014</p>
     </div>
 </body>
 </html>
