@@ -1,10 +1,13 @@
 <?php
 session_start();
-$host = 'localhost';
-$port = '1521';
-$service_name = 'flight';
-$oracleUsername = 'system';
-$oraclePassword = 'abhinav2';
+
+$config = include('config.php');
+
+$host = $config['host'];
+$port = $config['port'];
+$service_name = $config['service_name'];
+$oracleUsername = $config['username'];
+$oraclePassword = $config['password'];
 
 $connStr = "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = $host)(PORT = $port))(CONNECT_DATA = (SERVICE_NAME = $service_name)))";
 
