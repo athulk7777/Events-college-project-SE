@@ -6,8 +6,11 @@ if (!isset($_SESSION['userid']) || $_SESSION['designation'] != 'ADMIN') {
     header('Location: CO-ORD_LOGIN.php'); // Redirect to login page if not logged in as admin
     exit();
 }
-
+$designation = $_SESSION['designation'];
 $config = include('config.php');
+if ($designation === 'ADMIN') {
+    include 'ADD_HEADER.php';
+}
 
 $host = $config['host'];
 $port = $config['port'];
@@ -25,6 +28,7 @@ if (!$connection) {
     $error = oci_error();
     die("Connection failed: " . $error['message']);
 }
+
 
 // Retrieve total admin expense for EID 101
 $query = "SELECT SUM(EXPENSE) AS total_admin_expense FROM Expense WHERE EID = 101";
@@ -84,7 +88,7 @@ $admin_profit = $total_profit + $total_sponsor_amount - $total_admin_expense;
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
             background-color: #000;
             color: #fff;
             overflow: auto;
@@ -274,5 +278,6 @@ $admin_profit = $total_profit + $total_sponsor_amount - $total_admin_expense;
             "retina_detect": true
         });
     </script>
+    <?php include 'footer.php'; ?>
 </body>
 </html>

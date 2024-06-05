@@ -1,5 +1,6 @@
 <?php
 session_start();
+$designation = $_SESSION['designation'];
 
 // Check if user is logged in and their designation is set
 if (!isset($_SESSION['designation'])) {
@@ -98,7 +99,12 @@ while ($row = oci_fetch_assoc($stmtSponsors)) {
 }
 oci_free_statement($stmtSponsors);
 
-include 'header.php';
+if ($designation === 'CO-ORD') {
+    include 'header.php';
+}
+if ($designation === 'ADMIN') {
+    include 'ADD_HEADER.php';
+}
 
 oci_close($connection); // Close the database connection when done
 ?>
