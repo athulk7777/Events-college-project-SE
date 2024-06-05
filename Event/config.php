@@ -2,8 +2,8 @@
 return [
     'host' => 'localhost',
     'port' => '1521',
-    'service_name' => 'flight',
+    'service_name' => 'orcl',
     'username' => 'system',
-    'password' => 'abhinav2'
+    'password' => '15461546'
 ];
 ?>

@@ -1,6 +1,21 @@
 <?php
+
+session_start();
+
+// Check if the user is logged in and if the designation is ADMIN
+if (!isset($_SESSION['userid']) || !isset($_SESSION['designation']) || $_SESSION['designation'] !== 'ADMIN') {
+    header('Location: CO-ORD_LOGIN.PHP'); // Redirect to login page if not logged in or not an admin
+    exit();
+}
+
+$designation = $_SESSION['designation'];
+$config = include('config.php');
+if ($designation === 'ADMIN') {
+    include 'ADD_HEADER.php';
+}
 // Database connection details
 $config = include('config.php');
+
 
 $host = $config['host'];
 $port = $config['port'];
@@ -13,6 +28,8 @@ $connStr = "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = $host)(PORT = $por
 
 // Establish connection
 $connection = oci_connect($oracleUsername, $oraclePassword, $connStr);
+
+
 
 if (!$connection) {
     $error = oci_error();
@@ -364,5 +381,6 @@ oci_close($connection); // Close the database connection when done
             "retina_detect": true
         });
     </script>
+    <?php include 'footer.php'; ?>
 </body>
 </html>
