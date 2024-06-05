@@ -3,7 +3,7 @@ session_start();
 
 // Check if the user is logged in
 if (!isset($_SESSION['userid']) || !isset($_SESSION['designation'])) {
-    header('Location: login.php'); // Redirect to login page if not logged in
+    header('Location: CO-ORD_LOGIN.php'); 
     exit();
 }
 

@@ -3,7 +3,7 @@ session_start();
 
 // Check if the user is logged in and if the designation is ADMIN
 if (!isset($_SESSION['userid']) || !isset($_SESSION['designation']) || $_SESSION['designation'] !== 'ADMIN') {
-    header('Location: login.php'); // Redirect to login page if not logged in or not an admin
+    header('Location: CO-ORD_LOGIN.php'); // Redirect to login page if not logged in or not an admin
     exit();
 }
 ?>
@@ -66,7 +66,7 @@ if (!isset($_SESSION['userid']) || !isset($_SESSION['designation']) || $_SESSION
         <button class="btn" onclick="window.location.href='ad_exp.php'">Manage Expense</button>
         <button class="btn" onclick="window.location.href='CO_SPON.php'">Sponsors</button>
         <button class="btn" onclick="window.location.href='ad_profit.php'">Check Profit</button>
-        <button class="btn" onclick="window.location.href='check_co_ord.php'">Check Co-ordinator</button>
+        <button class="btn" onclick="window.location.href='ADD_CO.php'">Check Co-ordinator</button>
         <button class="btn" onclick="window.location.href='CO-ORD_LOGIN.PHP'">Logout</button>
     </div>
 
