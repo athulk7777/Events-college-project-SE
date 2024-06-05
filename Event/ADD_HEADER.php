@@ -100,7 +100,7 @@
         </div>
         <div class="title">NEURA</div>
         <div class="nav-links">
-            <a href="">Home</a>
+            <a href="adminpanel.php">Home</a>
             <div class="dropdown">
                 <button class="dropbtn">Manage</button>
                 <div class="dropdown-content">

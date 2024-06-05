@@ -129,7 +129,7 @@ oci_close($connection); // Close the database connection when done
             background-size: cover;
             font-family: Arial, sans-serif;
             color: white;
-            overflow: hidden;
+            overflow: auto;
         }
         #particles-js {
             position: absolute;
