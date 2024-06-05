@@ -39,8 +39,8 @@ if ($row = oci_fetch_assoc($stmt)) {
     $eid = $row['EID'];
 }
 oci_free_statement($stmt);
-
-if (!$eid) {
+if($designation === 'ADMIN'){
+}elseif (!$eid) {
     die("Event ID not found for the given user.");
 }
 
