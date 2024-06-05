@@ -10,12 +10,13 @@ if (!isset($_SESSION['userid']) || !isset($_SESSION['designation'])) {
 $userid = $_SESSION['userid'];
 $designation = $_SESSION['designation'];
 
-// Database connection details
-$host = 'localhost';
-$port = '1521';
-$service_name = 'orcl';
-$oracleUsername = 'system';
-$oraclePassword = '15461546';
+$config = include('config.php');
+
+$host = $config['host'];
+$port = $config['port'];
+$service_name = $config['service_name'];
+$oracleUsername = $config['username'];
+$oraclePassword = $config['password'];
 
 // Connection string
 $connStr = "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = $host)(PORT = $port))(CONNECT_DATA = (SERVICE_NAME = $service_name)))";
@@ -54,6 +55,10 @@ if ($row = oci_fetch_assoc($stmt)) {
 }
 oci_free_statement($stmt);
 
+if ($designation === 'CO-ORD') {
+    include 'header.php';
+}
+
 oci_close($connection); // Close the database connection when done
 ?>
 
@@ -67,7 +72,7 @@ oci_close($connection); // Close the database connection when done
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            overflow: hidden;
+            overflow: auto;
         }
         #particles-js {
             position: absolute;
@@ -209,5 +214,6 @@ oci_close($connection); // Close the database connection when done
             "retina_detect": true
         });
     </script>
+    <?php include 'footer.php'; ?>
 </body>
 </html>

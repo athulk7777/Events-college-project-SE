@@ -96,7 +96,7 @@
 <body class="Hbody">
     <div class="header">
         <div class="user-icon">
-            <a href="manage_ac.php"><img src="user.gif" alt="User Icon"></a>
+            <a href="MANAGE_ACC.php"><img src="user.gif" alt="User Icon"></a>
         </div>
         <div class="title">NEURA</div>
         <div class="nav-links">
