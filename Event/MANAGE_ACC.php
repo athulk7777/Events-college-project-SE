@@ -58,7 +58,9 @@ oci_free_statement($stmt);
 if ($designation === 'CO-ORD') {
     include 'header.php';
 }
-
+if ($designation === 'ADMIN') {
+    include 'ADD_HEADER.php';
+}
 oci_close($connection); // Close the database connection when done
 ?>
 
