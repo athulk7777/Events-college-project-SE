@@ -10,6 +10,10 @@ if (!isset($_SESSION['userid']) || !isset($_SESSION['designation'])) {
 $userid = $_SESSION['userid'];
 $designation = $_SESSION['designation'];
 
+if ($designation === 'CO-ORD') {
+    include 'header.php';
+}
+
 // Database connection details
 $host = 'localhost';
 $port = '1521';
