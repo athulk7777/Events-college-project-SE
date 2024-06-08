@@ -10,6 +10,10 @@ if (!isset($_SESSION['userid']) || !isset($_SESSION['designation'])) {
 $userid = $_SESSION['userid'];
 $designation = $_SESSION['designation'];
 
+if ($designation === 'CO-ORD') {
+    include 'header.php';
+}
+
 // Database connection details
 $host = 'localhost';
 $port = '1521';
@@ -108,7 +112,7 @@ oci_close($connection); // Close the database connection when done
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            overflow: hidden;
+            overflow: auto;
         }
         #particles-js {
             position: absolute;
@@ -301,5 +305,6 @@ oci_close($connection); // Close the database connection when done
             "retina_detect": true
         });
     </script>
+    <?php include 'footer.php'; ?>
 </body>
 </html>
