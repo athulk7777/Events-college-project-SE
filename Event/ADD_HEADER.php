@@ -104,18 +104,19 @@
             <div class="dropdown">
                 <button class="dropbtn">Manage</button>
                 <div class="dropdown-content">
-                    <a href="" class="button">Manage Event</a>
-                    <a href="" class="button">Add Expense</a>
-                    <a href="" class="button">Check Profit</a>
-                    <a href="" class="button">Add Sponsors</a>
+                    <a href="eventupd.php" class="button">Manage Event</a>
+                    <a href="ad_exp.php" class="button">Manage Expense</a>
+                    <a href="ad_profit.php" class="button">Check Profit</a>
+                    <a href="CO_SPON.php" class="button">Add Sponsors</a>
+                    <a href="ADD_CO.php" class="button">Manage Co ordinator</a>
                 </div>
             </div>
             <div class="dropdown">
-                <button class="dropbtn">Registration</button>
+                <!-- <button class="dropbtn">Registration</button>
                 <div class="dropdown-content">
                     <a href="">ON-SPOT REGISTRATION</a>
                     <a href="">CHECK REGISTRATION</a>
-                </div>
+                </div> -->
             </div>
             <button onclick="location.href='CO-ORD_LOGIN.PHP'" class="logout-btn">Logout</button>
         </div>

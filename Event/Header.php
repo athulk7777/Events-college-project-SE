@@ -108,6 +108,7 @@
                     <a href="ADD_EXPENSE.php" class="button">Add Expense</a>
                     <a href="CHECK_PROFIT.php" class="button">Check Profit</a>
                     <a href="CO_SPON.php" class="button">Add Sponsors</a>
+                    <a href="ADD_FILTERS.php" class="button">Add Filters</a>
                 </div>
             </div>
             <div class="dropdown">
