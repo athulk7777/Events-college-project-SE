@@ -2,7 +2,7 @@
 session_start();
 
 // Check if the user is logged in
-if (!isset($_SESSION['userid']) || !isset($_SESSION['designation'])) {
+if (!isset($_SESSION['userid'])) {
     header('Location: CO-ORD_LOGIN.PHP'); // Redirect to login page if not logged in
     exit();
 }
@@ -26,41 +26,50 @@ $connection = oci_connect($oracleUsername, $oraclePassword, $connStr);
 
 if (!$connection) {
     $error = oci_error();
-    die("Connection failed: " . $error['message']);
+    die("Connection failed: " . htmlspecialchars($error['message']));
 }
 
-// Get EID from Co_ord table based on UserId
-$query = "SELECT Eid FROM Co_ord WHERE UserId = :userid";
-$stmt = oci_parse($connection, $query);
-oci_bind_by_name($stmt, ':userid', $userid);
-oci_execute($stmt);
-$eid = null;
-if ($row = oci_fetch_assoc($stmt)) {
-    $eid = $row['EID'];
-}
-oci_free_statement($stmt);
-if($designation === 'ADMIN'){
-}elseif (!$eid) {
-    die("Event ID not found for the given user.");
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $currentPassword = $_POST['current_password'];
+    $newUserId = $_POST['new_userid'];
+    $newPassword = $_POST['new_password'];
+    $confirmPassword = $_POST['confirm_password'];
+
+    // Check if the current password is correct
+    $query = "SELECT Pwd FROM Co_ord WHERE UserId = :userid";
+    $stmt = oci_parse($connection, $query);
+    oci_bind_by_name($stmt, ':userid', $userid);
+    oci_execute($stmt);
+
+    $row = oci_fetch_assoc($stmt);
+    oci_free_statement($stmt);
+
+    if ($row && $row['PWD'] === $currentPassword) {
+        if ($newPassword === $confirmPassword) {
+            // Update the user ID and password
+            $query = "UPDATE Co_ord SET UserId = :new_userid, Pwd = :new_password WHERE UserId = :userid";
+            $stmt = oci_parse($connection, $query);
+            oci_bind_by_name($stmt, ':new_userid', $newUserId);
+            oci_bind_by_name($stmt, ':new_password', $newPassword);
+            oci_bind_by_name($stmt, ':userid', $userid);
+            oci_execute($stmt);
+
+            if (oci_num_rows($stmt) > 0) {
+                $_SESSION['userid'] = $newUserId; // Update session with new user ID
+                echo "User ID and password updated successfully.";
+            } else {
+                echo "Failed to update User ID and password.";
+            }
+            oci_free_statement($stmt);
+        } else {
+            echo "New password and confirm password do not match.";
+        }
+    } else {
+        echo "Current password is incorrect.";
+    }
 }
 
-// Get event details from Events table based on EID
-$query = "SELECT Ename FROM Events WHERE Eid = :eid";
-$stmt = oci_parse($connection, $query);
-oci_bind_by_name($stmt, ':eid', $eid);
-oci_execute($stmt);
-$eventName = null;
-if ($row = oci_fetch_assoc($stmt)) {
-    $eventName = $row['ENAME'];
-}
-oci_free_statement($stmt);
-
-if ($designation === 'CO-ORD') {
-    include 'header.php';
-}
-if ($designation === 'ADMIN') {
-    include 'ADD_HEADER.php';
-}
 oci_close($connection); // Close the database connection when done
 ?>
 
@@ -69,7 +78,7 @@ oci_close($connection); // Close the database connection when done
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Account</title>
+    <title>Change UserID and Password</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -83,16 +92,32 @@ oci_close($connection); // Close the database connection when done
             z-index: -1;
             background-color: #000; /* Ensure background color for visibility */
         }
-        .container {
-            text-align: center;
-            padding: 50px;
-            position: relative;
+        .form-container {
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            width: 300px;
             z-index: 1;
         }
-        .button-container {
-            margin-top: 20px;
+        .form-container h2 {
+            margin-bottom: 20px;
+            color: #fff;
         }
-        .button {
+        .form-container form {
+            display: flex;
+            flex-direction: column;
+        }
+        .form-container form input {
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #222;
+            color: #fff;
+        }
+        .form-container form button {
             display: inline-block;
             padding: 10px 20px;
             margin: 10px;
@@ -105,25 +130,39 @@ oci_close($connection); // Close the database connection when done
             text-decoration: none;
             transition: background-color 0.3s, color 0.3s;
         }
-        .button:hover {
+        .form-container form button:hover {
             background-color: #000;
             color: #fff;
         }
-        h1, p {
+        .user-id {
+            position: absolute;
+            top: 20px;
+            left: 20px;
             color: #fff;
+            background-color: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            border-radius: 5px;
         }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
-    <div class="container">
-        <h1>Manage Account</h1>
-        <p>Event Name: <?php echo htmlspecialchars($eventName); ?></p>
-
-        <div class="button-container">
-            <a href="UPDATE_DET.php" class="button">Update Details</a>
-            <a href="CHANAGE_ACC.php" class="button">Change Userid || Password</a>
-        </div>
+    <?php  
+    if ($designation === 'CO-ORD') {
+        include 'header.php';
+    } elseif ($designation === 'ADMIN') {
+        include 'ADD_HEADER.php';
+    }
+    ?>
+    <div class="form-container">
+        <h2>Change UserID and Password</h2>
+        <form method="post">
+            <input type="text" name="new_userid" value="<?php echo htmlspecialchars($userid); ?>" placeholder="New UserID" required>
+            <input type="password" name="current_password" placeholder="Current Password" required>
+            <input type="password" name="new_password" placeholder="New Password" required>
+            <input type="password" name="confirm_password" placeholder="Confirm Password" required>
+            <button type="submit">Update</button>
+        </form>
     </div>
 
     <script src="js/particles.min.js"></script>

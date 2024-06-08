@@ -1,11 +1,11 @@
 <?php
 session_start();
 
-// Check if the user is logged in
 if (!isset($_SESSION['userid']) || !isset($_SESSION['designation'])) {
-    header('Location: login.php'); // Redirect to login page if not logged in
+    header('Location: CO-ORD_LOGIN.php'); 
     exit();
 }
+
 
 $userid = $_SESSION['userid'];
 $designation = $_SESSION['designation'];
@@ -95,6 +95,8 @@ while ($row = oci_fetch_assoc($stmt)) {
 }
 oci_free_statement($stmt);
 
+include 'header.php';
+
 oci_close($connection); // Close the database connection when done
 ?>
 
@@ -108,7 +110,7 @@ oci_close($connection); // Close the database connection when done
         body {
             font-family: Arial, sans-serif;
             margin: 0;
-            overflow: hidden;
+            overflow: auto;
         }
         #particles-js {
             position: absolute;
@@ -301,5 +303,6 @@ oci_close($connection); // Close the database connection when done
             "retina_detect": true
         });
     </script>
+    <?php include 'footer.php'; ?>
 </body>
 </html>

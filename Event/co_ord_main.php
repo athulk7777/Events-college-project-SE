@@ -1,7 +1,6 @@
 <?php
 session_start();
 
-// Check if the user is logged in
 if (!isset($_SESSION['userid']) || !isset($_SESSION['designation'])) {
     header('Location: CO-ORD_LOGIN.PHP'); // Redirect to login page if not logged in
     exit();
@@ -111,6 +110,7 @@ oci_close($connection); // Close the database connection when done
                 <a href="CHECK_PROFIT.php" class="button">Check Profit</a>
                 <a href="ONSPOT_REG.php" class="button">On-Spot Registration</a>
                 <a href="CO_SPON.php" class="button">Add Sponsors</a>
+                <a href="ADD_FILTERS.php" class="button">Add Search Filters</a>
             <?php } ?>
             <a href="CHECK_REG.php" class="button">Check Registration</a>
         </div>
