@@ -1,11 +1,4 @@
 <?php
-session_start();
-
-// Check if the user is logged in
-if (!isset($_SESSION['userid']) || !isset($_SESSION['designation'])) {
-    header('Location: CO-ORD_LOGIN.PHP'); // Redirect to login page if not logged in
-    exit();
-}
 
 $config = include('config.php');
 
