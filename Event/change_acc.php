@@ -71,13 +71,17 @@ oci_close($connection); // Close the database connection when done
             font-family: Arial, sans-serif;
             margin: 0;
             overflow: auto;
+            height: 100vh; /* Make sure the body takes full viewport height */
+            display: flex;
+            justify-content: center;
+            align-items: center; /* Center content vertically */
+            background-color: #000; /* Ensure background color for visibility */
         }
         #particles-js {
             position: absolute;
             width: 100%;
             height: 100%;
             z-index: -1;
-            background-color: #000; /* Ensure background color for visibility */
         }
         .form-container {
             background-color: rgba(0, 0, 0, 0.8);
@@ -86,8 +90,6 @@ oci_close($connection); // Close the database connection when done
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             width: 300px;
             z-index: 1;
-            margin: auto;
-            margin-top: 100px;
         }
         .form-container h2 {
             margin-bottom: 20px;
@@ -148,6 +150,7 @@ oci_close($connection); // Close the database connection when done
 
     <script src="js/particles.min.js"></script>
     <script>
+        console.log("Particles.js loaded");
         particlesJS('particles-js', {
             "particles": {
                 "number": {
@@ -239,3 +242,4 @@ oci_close($connection); // Close the database connection when done
     </script>
 </body>
 </html>
+

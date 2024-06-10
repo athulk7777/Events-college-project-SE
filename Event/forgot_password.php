@@ -17,27 +17,31 @@ $connection = oci_connect($oracleUsername, $oraclePassword, $connStr);
 
 if (!$connection) {
     $error = oci_error();
-    die("Connection failed: " . $error['message']);
+    die("Connection failed: " . htmlspecialchars($error['message']));
 }
 
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $designation = $_POST['designation'];
+    $prev_pwd = $_POST['prev_pwd'];
 
     if ($designation === 'CO-ORD') {
         $regid = $_POST['regid'];
-        $prev_pwd = $_POST['prev_pwd'];
-        
         $query = "SELECT UserId FROM Co_ord WHERE Regno = :regid AND prev_pwd = :prev_pwd AND Designation = 'CO-ORD'";
         $stmt = oci_parse($connection, $query);
         oci_bind_by_name($stmt, ':regid', $regid);
         oci_bind_by_name($stmt, ':prev_pwd', $prev_pwd);
-        
+
     } elseif ($designation === 'ADMIN') {
         $userid = $_POST['userid'];
-        $prev_pwd = $_POST['prev_pwd'];
-        
         $query = "SELECT UserId FROM Co_ord WHERE UserId = :userid AND prev_pwd = :prev_pwd AND Designation = 'ADMIN'";
+        $stmt = oci_parse($connection, $query);
+        oci_bind_by_name($stmt, ':userid', $userid);
+        oci_bind_by_name($stmt, ':prev_pwd', $prev_pwd);
+
+    } elseif ($designation === 'VOLUNTEER') {
+        $userid = $_POST['userid'];
+        $query = "SELECT UserId FROM Co_ord WHERE UserId = :userid AND prev_pwd = :prev_pwd AND Designation = 'VOLUNTEER'";
         $stmt = oci_parse($connection, $query);
         oci_bind_by_name($stmt, ':userid', $userid);
         oci_bind_by_name($stmt, ':prev_pwd', $prev_pwd);
@@ -137,6 +141,7 @@ oci_close($connection);
             <select id="designation" name="designation" required onchange="toggleFields()">
                 <option value="ADMIN">ADMIN</option>
                 <option value="CO-ORD">CO-ORD</option>
+                <option value="VOLUNTEER">VOLUNTEER</option>
             </select><br>
 
             <div id="admin-fields" style="display:none;">
@@ -155,6 +160,14 @@ oci_close($connection);
                 <input type="password" id="prev_pwd_coord" name="prev_pwd"><br>
             </div>
 
+            <div id="volunteer-fields" style="display:none;">
+                <label for="userid_volunteer">User ID:</label>
+                <input type="text" id="userid_volunteer" name="userid"><br>
+
+                <label for="prev_pwd_volunteer">Previous Password:</label>
+                <input type="password" id="prev_pwd_volunteer" name="prev_pwd"><br>
+            </div>
+
             <button type="submit">Verify</button>
         </form>
     </div>
@@ -164,13 +177,20 @@ oci_close($connection);
             var designation = document.getElementById('designation').value;
             var adminFields = document.getElementById('admin-fields');
             var coordFields = document.getElementById('coord-fields');
+            var volunteerFields = document.getElementById('volunteer-fields');
 
             if (designation === 'ADMIN') {
                 adminFields.style.display = 'block';
                 coordFields.style.display = 'none';
+                volunteerFields.style.display = 'none';
             } else if (designation === 'CO-ORD') {
                 adminFields.style.display = 'none';
                 coordFields.style.display = 'block';
+                volunteerFields.style.display = 'none';
+            } else if (designation === 'VOLUNTEER') {
+                adminFields.style.display = 'none';
+                coordFields.style.display = 'none';
+                volunteerFields.style.display = 'block';
             }
         }
 
