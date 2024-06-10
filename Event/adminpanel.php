@@ -108,6 +108,7 @@ oci_close($connection); // Close the database connection when done
             <button class="btn" onclick="window.location.href='CO_SPON.php'">Sponsors</button>
             <button class="btn" onclick="window.location.href='ad_profit.php'">Check Profit</button>
             <button class="btn" onclick="window.location.href='ADD_CO.php'">Manage Co-ordinator</button>
+            <button class="btn" onclick="window.location.href='previous.php'">Previous Password</button>
             
         </div>
 

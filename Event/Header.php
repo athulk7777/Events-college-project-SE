@@ -111,6 +111,8 @@
                     <a href="CHECK_PROFIT.php" class="button">Check Profit</a>
                     <a href="CO_SPON.php" class="button">Add Sponsors</a>
                     <a href="ADD_FILTERS.php" class="button">Add Filters</a>
+                    <a href="previous.php" class="button">Previous Password</a>
+                    
                 </div>
             </div>
             <div class="dropdown">
