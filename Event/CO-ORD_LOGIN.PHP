@@ -8,6 +8,7 @@ $port = $config['port'];
 $service_name = $config['service_name'];
 $oracleUsername = $config['username'];
 $oraclePassword = $config['password'];
+
 // Connection string
 $connStr = "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = $host)(PORT = $port))(CONNECT_DATA = (SERVICE_NAME = $service_name)))";
 
@@ -122,6 +123,19 @@ oci_close($connection);
             transition-duration: 0.5s;
             box-shadow: 0 4px 8px 0 white, 0 6px 20px 0 white;   
         }
+        .forgot-password {
+            color: #fff;
+            font-size: 14px;
+            display: block;
+            margin-top: 10px;
+        }
+        .forgot-password a {
+            color: #fff;
+            text-decoration: underline;
+        }
+        .forgot-password a:hover {
+            color: #ccc;
+        }
     </style>
 </head>
 <body>
@@ -144,6 +158,9 @@ oci_close($connection);
 
             <button type="submit">Login</button>
         </form>
+        <div class="forgot-password">
+            <a href="forgot_password.php">Forgot Password?</a>
+        </div>
     </div>
 
     <script src="js/particles.min.js"></script>
