@@ -65,8 +65,6 @@ oci_free_statement($eventsStmt);
 oci_close($connection); // Close the database connection when done
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -140,7 +138,7 @@ oci_close($connection); // Close the database connection when done
             display: block;
             margin-bottom: 5px;
         }
-        input[type="text"], input[type="password"] {
+        input[type="text"], input[type="password"], select {
             width: 100%;
             padding: 8px;
             box-sizing: border-box;
@@ -206,36 +204,22 @@ oci_close($connection); // Close the database connection when done
                         <input type="text" id="phoneno" name="phoneno" required>
                     </div>
                     <div class="form-group">
-                        <label for="Eid">Event id:</label>
-                        <input type="number" id="Eid" name="Eid" required>
+                        <label for="Eid">Event Name:</label>
+                        <select id="Eid" name="Eid" required>
+                            <?php foreach ($events as $event): ?>
+                                <option value="<?php echo htmlspecialchars($event['EID']); ?>">
+                                    <?php echo htmlspecialchars($event['ENAME']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
                     </div>
                     <button type="submit">Register</button>
                 </form>
-            </div>
-            <div class="events-section">
-                <h2>Available Events</h2>
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Event ID</th>
-                            <th>Event Name</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php foreach ($events as $event): ?>
-                            <tr>
-                                <td><?php echo htmlspecialchars($event['EID']); ?></td>
-                                <td><?php echo htmlspecialchars($event['ENAME']); ?></td>
-                            </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
 
     <!-- Include particles.js script file manually here -->
-    <!-- <script src="js/particles.min.js"></script> -->
     <script src="js/particles.min.js"></script>
     <script>
         particlesJS('particles-js', {
