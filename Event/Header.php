@@ -106,6 +106,7 @@
                 <div class="dropdown-content">
                     <a href="CO_ORD_EVENT.php" class="button">Manage Event</a>
                     <a href="MANAGE_ACC.php" class="button">Manage Account</a>
+                    <a href="MANAGE_VOL.php" class="button">Manage Volunteer</a>
                     <a href="ADD_EXPENSE.php" class="button">Add Expense</a>
                     <a href="CHECK_PROFIT.php" class="button">Check Profit</a>
                     <a href="CO_SPON.php" class="button">Add Sponsors</a>
