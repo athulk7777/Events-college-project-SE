@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Website</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="">
+    <link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"/>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap');
+
+        :root{
+            --main-color: #3867d6;
+
+        }
+
+
+
+        *{
+            font-family: "Nunito", sans-serif;
+            margin: 0;
+            box-sizing: border-box;
+            outline: none;
+            border: none;
+            text-decoration: none;
+            text-transform: capitalize;
+            transition: .2s linear;
+        }
+        html{
+            font-size: 62.5%;
+            overflow-x: hidden;
+            scroll-padding-top: 7rem;
+            scroll-behavior: smooth;
+        }
+        html::-webkit-scrollbar{
+            width: 1rem;
+        }
+        html::-webkit-scrollbar-track{
+            background: #444;
+        }
+        html::-webkit-scrollbar-thumb{
+            background: var(--main-color);
+            border-radius: 5rem;
+        }
+
+        body{
+            background: #222;
+        }
+
+        section{
+            padding: 2rem 9%;
+        }
+
+        .btn{
+            margin-top: 1rem;
+            display: inline-block;
+            padding: .8rem 3rem;
+            font-size: 1.7rem;
+            border-radius: .5rem;
+            background: #666;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn:hover{
+            background: var(--main-color);
+        }
+
+        .header{
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10000;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1.5rem 9%;
+        }
+        .header .logo{
+            font-weight: bolder;
+            color: #fff;
+            font-size: 2.5rem;
+
+        }
+
+        .header .logo span{
+            color: var(--main-color);
+
+        }
+
+        .header .navbar a{
+            font-size: 1.7rem;
+            color: #fff;
+            margin-left: 2rem;
+        }
+        .header .navbar a:hover{
+            color: var(--main-color);
+
+        }
+        #menu-bars{
+            font-size: 3rem;
+            color: #fff;
+            cursor: pointer;
+            display: none;
+        }
+
+        .home .content{
+            text-align: center;
+            padding-top: 6rem;
+            margin: 2rem auto;
+            max-width: 70rem;
+        }
+
+        .home .content h3{
+            color: #fff;
+            font-size: 4.5rem;
+            text-transform: uppercase;
+        }
+
+        .home .content h3 span {
+            color: var(--main-color);
+    
+            text-transform: uppercase;
+        }
+
+
+
+
+
+
+
+        @media (max-width: 991px){
+            html{
+            font-size: 55%;
+            }
+            .header{
+                padding: 1.5rem 2rem;
+            }
+        }
+
+        @media (max-width: 768px){
+            #menu-bars{
+                display: initial;
+            }
+            .header .navbar{
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                border-top: .1rem solid #222;
+                background: #333;
+                clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+                
+              
+            }
+
+            .header .navbar .active{
+                clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+                
+
+            }
+
+            .fa-times{
+                transform: rotate(180deg);
+            }
+
+            .header .navbar a{
+                display: flex;
+                background: #222;
+                border-radius: .5rem;
+                padding: 1.3rem;
+                margin: 1.3rem;
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 450px){
+            html{
+            font-size: 50%;
+            }
+          
+        }
+    </style>
+</head>
+<body>
+    
+<header class="header">
+    <a href="#" class="logo"><span>N</span>eura</a>
+    <nav class="navbar">
+        <a href="#home">Home</a>
+        <a href="#event">Events</a>
+        <a href="#Registration">Registration</a>
+        <a href="#Gallery">Gallery</a>
+        <a href="#Contact">Contact</a>
+    </nav>
+    <div id="menu-bars" class="fas fa-bars"></div>
+
+
+</header>
+
+<section class="home" id="home">
+    <div class="content">
+    <h3>Its time to celebrate! The National level <span>Symposium</span></h3>
+    <a href="" class="btn">contact us</a>
+    </div>
+
+    <div class="swiper home-slider">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide"><img src="./images/pic1.jpg" alt=""></div>
+             <div class="swiper-slide"><img src="./images/pic2.jpg" alt=""></div>
+              <div class="swiper-slide"><img src="./images/pic3.jpg" alt=""></div>
+               <div class="swiper-slide"><img src="./images/pic4.jpg" alt=""></div>
+                <div class="swiper-slide"><img src="./images/pic5.jpg" alt=""></div>
+                 <div class="swiper-slide"><img src="./images/pic6.jpg" alt=""></div>
+                  <div class="swiper-slide"><img src="./images/pic7.jpg" alt=""></div>
+                   <div class="swiper-slide"><img src="./images/pic8.jpg" alt=""></div>
+        </div>
+    </div>
+
+</section>
+
+
+
+
+
+    <!-- <script src="./script.js"></script> -->
+    <script>
+        let menu = document.querySelector('#menu-bars');
+        let navbar = document.querySelector('.navbar');
+
+menu.onclick = () =>{
+    menu.classList.toggle('fa-times');
+    navbar.classList.toggle('active');
+}
+window.onscroll = () =>{
+    menu.classList.remove('fa-times');
+    navbar.classList.remove('active');
+}
+
+var swiper = new Swiper(".home-slider", {
+      effect: "coverflow",
+      grabCursor: true,
+      centeredSlides: true,
+      slidesPerView: "auto",
+      coverflowEffect: {
+        rotate: 50,
+        stretch: 0,
+        depth: 100,
+        modifier: 1,
+        slideShadows: true,
+      },
+     
+      loop:true,
+      autoplay:{
+        delay:3000,
+        disableOnInteraction: false,
+      }
+    });
+
+
+    </script>
+ <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+</body>
+</html>
