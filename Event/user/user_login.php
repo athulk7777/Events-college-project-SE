@@ -174,9 +174,10 @@ oci_close($connection);
             height: 36px;
             border-radius: 50%;
             color: #ffeba7;
-            background-color: #102770;
+
+            background-color: #1f2029;
             font-family: 'unicons';
-            content: '\eb4f';
+            content: url("arrow1.png");
             z-index: 20;
             top: -10px;
             left: -10px;
