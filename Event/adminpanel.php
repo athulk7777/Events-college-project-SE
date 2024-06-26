@@ -103,7 +103,7 @@ oci_close($connection); // Close the database connection when done
         <p>Your designation: <?php echo htmlspecialchars($designation); ?></p>
 
         <div class="button-container">
-            <button class="btn" onclick="window.location.href='eventupd.php'">Manage Event</button>
+            <button class="btn" onclick="window.location.href='AD_EVENT.php'">Manage Event</button>
             <button class="btn" onclick="window.location.href='ad_exp.php'">Manage Expense</button>
             <button class="btn" onclick="window.location.href='CO_SPON.php'">Sponsors</button>
             <button class="btn" onclick="window.location.href='ad_profit.php'">Check Profit</button>
