@@ -126,17 +126,17 @@ oci_close($connection); // Close the database connection when done
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            background: linear-gradient(135deg, #ff0303 0%, #2923d9 100%);
             overflow-x: hidden;
             animation: backgroundAnimation 15s infinite alternate;
         }
 
         @keyframes backgroundAnimation {
             0%, 100% {
-                background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+                background: linear-gradient(135deg, #ff0303 0%, #2923d9 100%);
             }
             50% {
-                background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+                background: linear-gradient(135deg, #2923d9 0%, #ff0303 100%);
             }
         }
 

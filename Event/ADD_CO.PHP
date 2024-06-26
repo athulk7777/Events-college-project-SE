@@ -30,6 +30,8 @@ if (!$connection) {
     die("Connection failed: " . $error['message']);
 }
 
+include 'ADD_HEADER.php';
+
 // Get event names for the dropdown, excluding those already assigned to a coordinator
 $event_query = "SELECT EID, ENAME FROM EVENTS WHERE EID NOT IN (SELECT EID FROM CO_ORD WHERE DESIGNATION='CO-ORD')";
 $event_stmt = oci_parse($connection, $event_query);
@@ -107,6 +109,8 @@ while ($row = oci_fetch_assoc($all_events_stmt)) {
     $all_events[$row['EID']] = $row['ENAME'];
 }
 oci_free_statement($all_events_stmt);
+
+
 
 oci_close($connection); // Close the database connection when done
 ?>

@@ -174,7 +174,6 @@ oci_close($connection);
             height: 36px;
             border-radius: 50%;
             color: #ffeba7;
-
             background-color: #1f2029;
             font-family: 'unicons';
             content: url("arrow1.png");
@@ -278,7 +277,6 @@ oci_close($connection);
             transition: all 200ms linear;
             box-shadow: 0 4px 8px 0 rgba(21, 21, 21, .2);
         }
-
         .form-style:focus,
         .form-style:active {
             border: none;
