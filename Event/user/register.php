@@ -37,8 +37,8 @@ $totalMembers = $event['TOTAL_MEMBERS'];
 oci_free_statement($stmt);
 
 // Fetch user details from the session email
-//$email = $_SESSION['EMAIL'];
-$email = "abhinavs1954@gmail.com"; // For testing purposes
+$email = $_SESSION['email'];
+// $email = "abhinavs1954@gmail.com"; // For testing purposes
 $query = "SELECT UNAME, PHONENO, COLLEGE, EMAIL FROM USER_DETAILS WHERE EMAIL = :email";
 $stmt = oci_parse($connection, $query);
 oci_bind_by_name($stmt, ':email', $email);

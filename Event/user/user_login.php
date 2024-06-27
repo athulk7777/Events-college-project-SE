@@ -26,7 +26,7 @@ function handleLogin($connection) {
         $_SESSION['userid'] = $row['USID'];
         $_SESSION['username'] = $row['UNAME'];
         $_SESSION['email'] = $row['EMAIL'];
-        header('Location: user_home.php');
+        header('Location: index.php');
         exit();
     } else {
         return "Invalid email or password.";
@@ -50,7 +50,7 @@ function handleSignUp($connection) {
     if (oci_execute($stmt)) {
         $_SESSION['username'] = $username;
         $_SESSION['email'] = $email;
-        header('Location: user_home.php');
+        header('Location: index.php');
         exit();
     } else {
         return "Error occurred during sign-up.";
@@ -93,7 +93,7 @@ oci_close($connection);
             line-height: 1.7;
             color: #c4c3ca;
             background-color: #000000;
-            overflow: auto;
+            overflow: hidden;
             margin: 0;
             padding: 0;
         }

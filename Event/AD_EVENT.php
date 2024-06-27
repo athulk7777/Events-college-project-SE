@@ -154,7 +154,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <body>
     <div id="particles-js"></div>
     <div class="container">
-        <h2>Insert Event</h2>
+        <h2>Admin Event Updation Form</h2>
         <div id="forms-container">
             <?php for ($i = 1; $i <= 25; $i++): ?>
                 <form id="form<?= $i ?>" class="<?= ($i === 1) ? 'active' : '' ?>" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
