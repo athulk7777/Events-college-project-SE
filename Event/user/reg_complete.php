@@ -1,4 +1,5 @@
 <?php
+    session_start();
 // Include TCPDF library
 require_once('tcpdf/tcpdf.php');
 
