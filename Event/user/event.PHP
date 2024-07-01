@@ -8,6 +8,7 @@ $port = $config['port'];
 $service_name = $config['service_name'];
 $oracleUsername = $config['username'];
 $oraclePassword = $config['password'];
+
 // Connection string
 $connStr = "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = $host)(PORT = $port))(CONNECT_DATA = (SERVICE_NAME = $service_name)))";
 
@@ -25,7 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search'])) {
     $searchTerm = $_POST['search'];
 
     // Search query
-    $query = "SELECT Eid, Ename, Entry_fees, EType, ELocation, EDate, ETime, SLOTS, TOTAL_MEMBERS FROM Events WHERE Ename LIKE :searchTerm";
+    $query = "SELECT e.Eid, e.Ename, e.Entry_fees, e.EType, e.ELocation, e.EDate, e.ETime, e.SLOTS, e.TOTAL_MEMBERS, 
+              COALESCE(ed.DESCRIP, 'Not provided') AS DESCRIP
+              FROM Events e
+              LEFT JOIN EVENT_DESCRIP ed ON e.Eid = ed.EID
+              WHERE e.Ename LIKE :searchTerm";
     $stmt = oci_parse($connection, $query);
 
     $searchTerm = '%' . $searchTerm . '%';
@@ -40,7 +45,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search'])) {
     oci_free_statement($stmt);
 } else {
     // Default query to display all events
-    $query = "SELECT Eid, Ename, Entry_fees, EType, ELocation, EDate, ETime, SLOTS, TOTAL_MEMBERS FROM Events";
+    $query = "SELECT e.Eid, e.Ename, e.Entry_fees, e.EType, e.ELocation, e.EDate, e.ETime, e.SLOTS, e.TOTAL_MEMBERS, 
+              COALESCE(ed.DESCRIP, 'Not provided') AS DESCRIP
+              FROM Events e
+              LEFT JOIN EVENT_DESCRIP ed ON e.Eid = ed.EID";
     $stmt = oci_parse($connection, $query);
     oci_execute($stmt);
 
@@ -72,7 +80,7 @@ oci_close($connection);
             width: 100%;
             height: 100%;
             z-index: -1;
-            background-color: #000; /* Ensure background color for visibility */
+            background-color: #000;
         }
         .container {
             position: relative;
@@ -165,27 +173,27 @@ oci_close($connection);
             </form>
         </div>
         <div class="results-container">
-        <?php if (!empty($searchResults)): ?>
-    <?php foreach ($searchResults as $event): ?>
-        <div class="event-card">
-            <h3><?php echo htmlspecialchars($event['ENAME']); ?></h3>
-            <p>Entry Fees: <?php echo htmlspecialchars($event['ENTRY_FEES']); ?></p>
-            <p>Type: <?php echo htmlspecialchars($event['ETYPE']); ?></p>
-            <p>Location: <?php echo htmlspecialchars($event['ELOCATION']); ?></p>
-            <p>Date: <?php echo htmlspecialchars($event['EDATE']); ?></p>
-            <p>Time: <?php echo htmlspecialchars($event['ETIME']); ?></p>
-            <p>Slots: <?php echo htmlspecialchars($event['SLOTS']); ?></p>
-            <p>Total Members: <?php echo htmlspecialchars($event['TOTAL_MEMBERS']); ?></p>
-            <form method="get" action="reg_event.php">
-                <input type="hidden" name="Eid" value="<?php echo htmlspecialchars($event['EID']); ?>">
-                <button type="submit">Register</button>
-            </form>
-        </div>
-    <?php endforeach; ?>
-<?php else: ?>
-    <p>No events found.</p>
-<?php endif; ?>
-
+            <?php if (!empty($searchResults)): ?>
+                <?php foreach ($searchResults as $event): ?>
+                    <div class="event-card">
+                        <h3><?php echo htmlspecialchars($event['ENAME']); ?></h3>
+                        <p>Description: <?php echo htmlspecialchars($event['DESCRIP']); ?></p>
+                        <p>Entry Fees: <?php echo htmlspecialchars($event['ENTRY_FEES']); ?></p>
+                        <p>Type: <?php echo htmlspecialchars($event['ETYPE']); ?></p>
+                        <p>Location: <?php echo htmlspecialchars($event['ELOCATION']); ?></p>
+                        <p>Date: <?php echo htmlspecialchars($event['EDATE']); ?></p>
+                        <p>Time: <?php echo htmlspecialchars($event['ETIME']); ?></p>
+                        <p>Slots: <?php echo htmlspecialchars($event['SLOTS']); ?></p>
+                        <p>Total Members: <?php echo htmlspecialchars($event['TOTAL_MEMBERS']); ?></p>
+                        <form method="get" action="reg_event.php">
+                            <input type="hidden" name="Eid" value="<?php echo htmlspecialchars($event['EID']); ?>">
+                            <button type="submit">Register</button>
+                        </form>
+                    </div>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <p>No events found.</p>
+            <?php endif; ?>
         </div>
     </div>
     <script src="js/particles.min.js"></script>
