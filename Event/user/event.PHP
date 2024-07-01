@@ -1,14 +1,13 @@
 <?php
 session_start();
 
-$config = include('config.php');
+$config = include('../config.php');
 
 $host = $config['host'];
 $port = $config['port'];
 $service_name = $config['service_name'];
 $oracleUsername = $config['username'];
 $oraclePassword = $config['password'];
-
 // Connection string
 $connStr = "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = $host)(PORT = $port))(CONNECT_DATA = (SERVICE_NAME = $service_name)))";
 
@@ -20,40 +19,33 @@ if (!$connection) {
     die("Connection failed: " . $error['message']);
 }
 
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $designation = $_POST['designation'];
-    $prev_pwd = $_POST['prev_pwd'];
-    $userid = null;
+// Handle search query
+$searchResults = [];
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search'])) {
+    $searchTerm = $_POST['search'];
 
-    if ($designation === 'ADMIN' || $designation === 'VOLUNTEER') {
-        $userid = $_POST['userid'];
-        $query = "SELECT * FROM Co_ord WHERE UserId = :userid AND prev_pwd = :prev_pwd AND Designation = :designation";
-        $stmt = oci_parse($connection, $query);
-        oci_bind_by_name($stmt, ':userid', $userid);
-    } elseif ($designation === 'CO-ORD') {
-        $regno = $_POST['regno'];
-        $query = "SELECT * FROM Co_ord WHERE Regno = :regno AND prev_pwd = :prev_pwd AND Designation = :designation";
-        $stmt = oci_parse($connection, $query);
-        oci_bind_by_name($stmt, ':regno', $regno);
-    }
+    // Search query
+    $query = "SELECT Eid, Ename, Entry_fees, EType, ELocation, EDate, ETime, SLOTS, TOTAL_MEMBERS FROM Events WHERE Ename LIKE :searchTerm";
+    $stmt = oci_parse($connection, $query);
 
-    oci_bind_by_name($stmt, ':prev_pwd', $prev_pwd);
-    oci_bind_by_name($stmt, ':designation', $designation);
+    $searchTerm = '%' . $searchTerm . '%';
+    oci_bind_by_name($stmt, ':searchTerm', $searchTerm);
+
     oci_execute($stmt);
 
-    if ($row = oci_fetch_assoc($stmt)) {
-        // Valid credentials
-        if ($designation === 'CO-ORD') {
-            $userid = $row['USERID']; // Retrieve the UserID for CO-ORD
-        }
-        $_SESSION['userid'] = $userid;
-        $_SESSION['designation'] = $designation;
-        header('Location: change_acc.php');
-        exit();
-    } else {
-        // Invalid credentials
-        echo "<p style='color:red;'>Invalid credentials. Please try again.</p>";
+    while ($row = oci_fetch_assoc($stmt)) {
+        $searchResults[] = $row;
+    }
+
+    oci_free_statement($stmt);
+} else {
+    // Default query to display all events
+    $query = "SELECT Eid, Ename, Entry_fees, EType, ELocation, EDate, ETime, SLOTS, TOTAL_MEMBERS FROM Events";
+    $stmt = oci_parse($connection, $query);
+    oci_execute($stmt);
+
+    while ($row = oci_fetch_assoc($stmt)) {
+        $searchResults[] = $row;
     }
 
     oci_free_statement($stmt);
@@ -67,12 +59,13 @@ oci_close($connection);
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forgot Password</title>
+    <title>Event Search</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             overflow: hidden;
+            background-color: #f4f4f9;
         }
         #particles-js {
             position: absolute;
@@ -81,85 +74,122 @@ oci_close($connection);
             z-index: -1;
             background-color: #000; /* Ensure background color for visibility */
         }
-        .forgot-password-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #000;
+        .container {
+            position: relative;
+            padding: 20px;
+        }
+        .search-container {
+            background: rgba(255, 255, 255, 0.8);
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
-            width: 300px;
+            margin-bottom: 20px;
         }
-        .forgot-password-container h2 {
-            color: #ffffff;
-            margin-bottom: 15px;
-            font-size: 30px;
+        .search-container h2 {
+            background-color: #000;
+            color: #fff;
+            margin-bottom: 20px;
         }
-        .forgot-password-container label {
-            color: #ffffff;
+        .search-container label {
             display: block;
+            color: #000;
             margin-bottom: 5px;
             text-align: left;
         }
-        .forgot-password-container input, .forgot-password-container select, .forgot-password-container button {
+        .search-container input, .search-container button {
             width: 100%;
             padding: 10px;
+            color: #000;
             margin-bottom: 10px;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
-        .forgot-password-container button {
-            background-color: white;
-            color: #000;
-            margin-top: 20px;
-            font-size: 15px;
+        .search-container button {
+            background-color: #000;
+            color: #fff;
             border: none;
+            padding: 10px;
+            border-radius: 5px;
             cursor: pointer;
         }
-        .forgot-password-container button:hover {
-            background-color: #000;
-            color: white;
-            font-size: 20px;
+        .search-container button:hover {
+            color: #000;
+            background-color: #fff;
             transition-duration: 0.5s;
-            box-shadow: 0 4px 8px 0 white, 0 6px 20px 0 white;   
+        }
+        .results-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .event-card {
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            width: 300px;
+            text-align: center;
+        }
+        .event-card h3 {
+            margin-top: 0;
+        }
+        .event-card p {
+            margin: 5px 0;
+        }
+        .event-card form button {
+            background-color: #fff;
+            color: #000;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .event-card form button:hover {
+            background-color: #000;
+            color: #fff;
         }
     </style>
 </head>
 <body>
     <div id="particles-js"></div>
-    <div class="forgot-password-container">
-        <h2>Forgot Password</h2>
-        <form method="post" action="">
-            <label for="designation">Designation:</label>
-            <select id="designation" name="designation" required>
-                <option value="ADMIN">ADMIN</option>
-                <option value="CO-ORD">CO-ORD</option>
-                <option value="VOLUNTEER">VOLUNTEER</option>
-            </select><br>
+    <div class="container">
+        <div class="search-container">
+            <h2>Search Events</h2>
+            <form method="post" action="">
+                <label for="search">Event Name:</label>
+                <input type="text" id="search" name="search" required><br>
+                <button type="submit">Search</button>
+            </form>
+        </div>
+        <div class="results-container">
+        <?php if (!empty($searchResults)): ?>
+    <?php foreach ($searchResults as $event): ?>
+        <div class="event-card">
+            <h3><?php echo htmlspecialchars($event['ENAME']); ?></h3>
+            <p>Entry Fees: <?php echo htmlspecialchars($event['ENTRY_FEES']); ?></p>
+            <p>Type: <?php echo htmlspecialchars($event['ETYPE']); ?></p>
+            <p>Location: <?php echo htmlspecialchars($event['ELOCATION']); ?></p>
+            <p>Date: <?php echo htmlspecialchars($event['EDATE']); ?></p>
+            <p>Time: <?php echo htmlspecialchars($event['ETIME']); ?></p>
+            <p>Slots: <?php echo htmlspecialchars($event['SLOTS']); ?></p>
+            <p>Total Members: <?php echo htmlspecialchars($event['TOTAL_MEMBERS']); ?></p>
+            <form method="get" action="reg_event.php">
+                <input type="hidden" name="Eid" value="<?php echo htmlspecialchars($event['EID']); ?>">
+                <button type="submit">Register</button>
+            </form>
+        </div>
+    <?php endforeach; ?>
+<?php else: ?>
+    <p>No events found.</p>
+<?php endif; ?>
 
-            <div id="userid-section">
-                <label for="userid">User ID:</label>
-                <input type="text" id="userid" name="userid"><br>
-            </div>
-
-            <div id="regno-section" style="display: none;">
-                <label for="regno">Reg No:</label>
-                <input type="text" id="regno" name="regno"><br>
-            </div>
-
-            <label for="prev_pwd">Previous Password:</label>
-            <input type="password" id="prev_pwd" name="prev_pwd" required><br>
-
-            <button type="submit">Verify</button>
-        </form>
+        </div>
     </div>
-
     <script src="js/particles.min.js"></script>
     <script>
-        console.log("Particles.js loaded");
         particlesJS('particles-js', {
             "particles": {
                 "number": {
@@ -247,25 +277,6 @@ oci_close($connection);
                 }
             },
             "retina_detect": true
-        });
-
-        // Show/Hide input fields based on designation selection
-        const designationSelect = document.getElementById('designation');
-        const userIdSection = document.getElementById('userid-section');
-        const regnoSection = document.getElementById('regno-section');
-
-        designationSelect.addEventListener('change', function() {
-            if (this.value === 'CO-ORD') {
-                userIdSection.style.display = 'none';
-                regnoSection.style.display = 'block';
-                document.getElementById('userid').required = false;
-                document.getElementById('regno').required = true;
-            } else {
-                userIdSection.style.display = 'block';
-                regnoSection.style.display = 'none';
-                document.getElementById('userid').required = true;
-                document.getElementById('regno').required = false;
-            }
         });
     </script>
 </body>

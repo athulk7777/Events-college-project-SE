@@ -20,6 +20,18 @@ if (!$connection) {
     die("Connection failed: " . $error['message']);
 }
 
+// Check if user is logged in
+if (!isset($_SESSION['userid'])) {
+    header('Location: user_login.php');
+    exit();
+}
+
+if (isset($_SESSION['userid'])) {
+    echo '<script>console.log("UserID: ' . $_SESSION['userid'] . '")</script>';
+}else{
+    echo 'no userid';
+}
+
 // Fetch event details
 if (isset($_GET['Eid'])) {
     $eid = $_GET['Eid'];
@@ -235,8 +247,8 @@ oci_close($connection);
 
     <script>
         function registerEvent() {
-            <?php if (!isset($_SESSION['USID']) || !isset($_SESSION['EMAIL'])): ?>
-                window.location.href = 'user_home.php';
+            <?php if (!isset($_SESSION['userid'])): ?>
+                window.location.href = 'user_login.php';
             <?php else: ?>
                 window.location.href = 'register.php?Eid=<?php echo $eid; ?>';
             <?php endif; ?>

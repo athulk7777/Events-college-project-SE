@@ -37,8 +37,8 @@ $totalMembers = $event['TOTAL_MEMBERS'];
 oci_free_statement($stmt);
 
 // Fetch user details from the session email
-//$email = $_SESSION['EMAIL'];
-$email = "abhinavs1954@gmail.com"; // For testing purposes
+$email = $_SESSION['email'];
+// $email = "abhinavs1954@gmail.com"; // For testing purposes
 $query = "SELECT UNAME, PHONENO, COLLEGE, EMAIL FROM USER_DETAILS WHERE EMAIL = :email";
 $stmt = oci_parse($connection, $query);
 oci_bind_by_name($stmt, ':email', $email);
@@ -107,8 +107,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Redirect to registration completion page after successful registration
     if (!isset($error)) {
-        header("Location: reg_complete.php?regId=$regId");
-        exit();
+        echo "<script>
+                var regId = '$regId';
+                document.addEventListener('DOMContentLoaded', function() {
+                    document.getElementById('regId').value = regId;
+                    document.getElementById('paymentModal').style.display = 'block';
+                });
+              </script>";
     }
 }
 
@@ -126,17 +131,17 @@ oci_close($connection); // Close the database connection when done
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            background: linear-gradient(135deg, #ff0303 0%, #2923d9 100%);
             overflow-x: hidden;
             animation: backgroundAnimation 15s infinite alternate;
         }
 
         @keyframes backgroundAnimation {
             0%, 100% {
-                background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+                background: linear-gradient(135deg, #ff0303 0%, #2923d9 100%);
             }
             50% {
-                background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+                background: linear-gradient(135deg, #2923d9 0%, #ff0303 100%);
             }
         }
 
@@ -347,7 +352,7 @@ oci_close($connection); // Close the database connection when done
         <div class="event-content">
             <div class="card">
                 <h2>User Details</h2>
-                <form action="" method="POST">
+                <form id="registrationForm" action="" method="POST">
                     <div class="form-group">
                         <label for="rname">Name:</label>
                         <input type="text" id="rname" name="rname" value="<?php echo $userDetails['UNAME']; ?>" readonly>
@@ -384,7 +389,7 @@ oci_close($connection); // Close the database connection when done
                             </div>
                         <?php endfor; ?>
                     <?php endif; ?>
-                    <button type="submit" class="btn">Register</button>
+                    <button type="button" class="btn" onclick="openPaymentModal()">Register</button>
                 </form>
                 <?php if (isset($message)): ?>
                     <p class="message"><?php echo $message; ?></p>
@@ -392,5 +397,71 @@ oci_close($connection); // Close the database connection when done
             </div>
         </div>
     </div>
+
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closePaymentModal()">&times;</span>
+            <h2>Payment</h2>
+            <form id="paymentForm" action="reg_complete.php" method="GET">
+                <input type="hidden" id="regId" name="regId" value="">
+                <button type="button" onclick="processPayment()">Pay Now</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function openPaymentModal() {
+            var form = document.getElementById("registrationForm");
+            if (form.reportValidity()) {
+                form.submit();
+            }
+        }
+
+        function closePaymentModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+        }
+
+        function processPayment() {
+            var paymentForm = document.getElementById("paymentForm");
+            paymentForm.submit();
+        }
+    </script>
+
+    <style>
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0,0,0);
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </body>
 </html>
