@@ -59,7 +59,157 @@ oci_close($connection);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Event Registration</title>
     <style>
-        /* Your existing styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            overflow-x: hidden;
+            animation: backgroundAnimation 15s infinite alternate;
+        }
+
+        @keyframes backgroundAnimation {
+            0% {
+                background: linear-gradient(135deg, #fc1c03 0%, #1916c7 100%);
+            }
+            50% {
+                background: linear-gradient(135deg, #fc1c03 0%, #1916c7 100%);
+            }
+            100% {
+                background: linear-gradient(135deg, #fc1c03 0%, #1916c7 100%);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            color: #fff;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        .event-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .event-header h1 {
+            font-size: 48px;
+            margin: 0;
+            background: -webkit-linear-gradient(#ff9a9e, #fad0c4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border: 2px solid;
+            border-image: linear-gradient(to right, #ff9a9e, #fad0c4) 1;
+            padding: 10px;
+            display: inline-block;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        .event-content {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            background: -webkit-linear-gradient(#ff9a9e, #fad0c4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border: 2px solid;
+            border-image: linear-gradient(to right, #ff9a9e, #fad0c4) 1;
+            padding: 5px;
+            display: inline-block;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        .card p {
+            font-size: 18px;
+            line-height: 1.6;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .description {
+            margin-bottom: 30px;
+        }
+
+        .description h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            background: -webkit-linear-gradient(#ff9a9e, #fad0c4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border: 2px solid;
+            border-image: linear-gradient(to right, #ff9a9e, #fad0c4) 1;
+            padding: 5px;
+            display: inline-block;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        .description p {
+            font-size: 18px;
+            line-height: 1.6;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .register-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #fff;
+            color: #000;
+            transition: background 0.3s, color 0.3s, transform 0.3s, box-shadow 0.3s;
+        }
+
+        button:hover {
+            background: #000;
+            color: #fff;
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
