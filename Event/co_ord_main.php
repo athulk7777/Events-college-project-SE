@@ -112,6 +112,8 @@ oci_close($connection); // Close the database connection when done
                 <a href="ONSPOT_REG.php" class="button">On-Spot Registration</a>
                 <a href="CO_SPON.php" class="button">Add Sponsors</a>
                 <a href="ADD_FILTERS.php" class="button">Add Search Filters</a>
+                <a href="AD_DESC.php" class="button">Price and Description</a>
+       
             <?php } ?>
             <a href="CHECK_REG.php" class="button">Check Registration</a>
         </div>

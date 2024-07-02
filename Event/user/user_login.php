@@ -50,7 +50,8 @@ function handleSignUp($connection) {
     if (oci_execute($stmt)) {
         $_SESSION['username'] = $username;
         $_SESSION['email'] = $email;
-        header('Location: index.php');
+        $_SESSION['signup_success'] = true;  // Set the session variable for successful sign-up
+        header('Location: user_login.php');  // Redirect to the login page
         exit();
     } else {
         return "Error occurred during sign-up.";
@@ -74,8 +75,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 oci_close($connection);
 ?>
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -84,7 +83,9 @@ oci_close($connection);
   <title>User Login</title>
   <link href="https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900" rel="stylesheet">
   <style>
-        @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900');
+
+
+     @import url('https://fonts.googleapis.com/css?family=Poppins:400,500,600,700,800,900');
 
         body {
             font-family: 'Poppins', sans-serif;
@@ -406,7 +407,10 @@ oci_close($connection);
             width: auto;
             display: block;
         }
-    </style>
+    
+        /* Yor existing CSS code here */
+        /* Ensure to include your existing CSS styles */
+  </style>
 </head>
 <body>
     <a href="https://ptuniv.edu.in/" class="logo" target="_blank">
@@ -480,6 +484,14 @@ oci_close($connection);
                                 </div>
                             </div>
                         </div>
+                        <script>
+                            <?php
+                            if (isset($_SESSION['signup_success'])) {
+                                echo "document.getElementById('reg-log').checked = true;";
+                                unset($_SESSION['signup_success']);
+                            }
+                            ?>
+                        </script>
                     </div>
                 </div>
             </div>

@@ -26,16 +26,11 @@ if (!isset($_SESSION['userid'])) {
     exit();
 }
 
-if (isset($_SESSION['userid'])) {
-    echo '<script>console.log("UserID: ' . $_SESSION['userid'] . '")</script>';
-}else{
-    echo 'no userid';
-}
-
 // Fetch event details
 if (isset($_GET['Eid'])) {
     $eid = $_GET['Eid'];
 
+    // Query to fetch event details
     $query = "SELECT Ename, Entry_fees, EType, ELocation, EDate, ETime, SLOTS, TOTAL_MEMBERS FROM Events WHERE Eid = :eid";
     $stmt = oci_parse($connection, $query);
 
@@ -45,6 +40,29 @@ if (isset($_GET['Eid'])) {
     $event = oci_fetch_assoc($stmt);
 
     oci_free_statement($stmt);
+
+    // Fetch event description
+    $descQuery = "SELECT DESCRIP FROM EVENT_DESCRIP WHERE EID = :eid";
+    $descStmt = oci_parse($connection, $descQuery);
+
+    oci_bind_by_name($descStmt, ':eid', $eid);
+    oci_execute($descStmt);
+
+    $description = oci_fetch_assoc($descStmt);
+    $description = $description ? $description['DESCRIP'] : "No description available.";
+
+    oci_free_statement($descStmt);
+
+    // Fetch prize details
+    $prizeQuery = "SELECT F_PRIZE, S_PRIZE, T_PRIZE FROM PRIZE WHERE EID = :eid";
+    $prizeStmt = oci_parse($connection, $prizeQuery);
+
+    oci_bind_by_name($prizeStmt, ':eid', $eid);
+    oci_execute($prizeStmt);
+
+    $prizes = oci_fetch_assoc($prizeStmt);
+
+    oci_free_statement($prizeStmt);
 } else {
     die("Event ID not provided.");
 }
@@ -60,6 +78,157 @@ oci_close($connection);
     <title>Event Registration</title>
     <style>
         /* Your existing styles */
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            overflow-x: hidden;
+            animation: backgroundAnimation 15s infinite alternate;
+        }
+
+        @keyframes backgroundAnimation {
+            0% {
+                background: linear-gradient(135deg, #fc1c03 0%, #1916c7 100%);
+            }
+            50% {
+                background: linear-gradient(135deg, #fc1c03 0%, #1916c7 100%);
+            }
+            100% {
+                background: linear-gradient(135deg, #fc1c03 0%, #1916c7 100%);
+            }
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            color: #fff;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        .event-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .event-header h1 {
+            font-size: 48px;
+            margin: 0;
+            background: -webkit-linear-gradient(#ff9a9e, #fad0c4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border: 2px solid;
+            border-image: linear-gradient(to right, #ff9a9e, #fad0c4) 1;
+            padding: 10px;
+            display: inline-block;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        .event-content {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .card {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .card h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            background: -webkit-linear-gradient(#ff9a9e, #fad0c4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border: 2px solid;
+            border-image: linear-gradient(to right, #ff9a9e, #fad0c4) 1;
+            padding: 5px;
+            display: inline-block;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        .card p {
+            font-size: 18px;
+            line-height: 1.6;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .description {
+            margin-bottom: 30px;
+        }
+
+        .description h2 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            background: -webkit-linear-gradient(#ff9a9e, #fad0c4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border: 2px solid;
+            border-image: linear-gradient(to right, #ff9a9e, #fad0c4) 1;
+            padding: 5px;
+            display: inline-block;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        .description p {
+            font-size: 18px;
+            line-height: 1.6;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        .register-button {
+            display: flex;
+            justify-content: center;
+            margin-top: 30px;
+        }
+
+        button {
+            padding: 15px 30px;
+            font-size: 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background: #fff;
+            color: #000;
+            transition: background 0.3s, color 0.3s, transform 0.3s, box-shadow 0.3s;
+        }
+
+        button:hover {
+            background: #000;
+            color: #fff;
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -80,15 +249,14 @@ oci_close($connection);
             </div>
             <div class="card">
                 <h2>Prizes</h2>
-                <p>1st Place: $1000</p>
-                <p>2nd Place: $500</p>
-                <p>3rd Place: $250</p>
+                <p><strong>1st Place:</strong> <?php echo htmlspecialchars($prizes['F_PRIZE']); ?></p>
+                <p><strong>2nd Place:</strong> <?php echo htmlspecialchars($prizes['S_PRIZE']); ?></p>
+                <p><strong>3rd Place:</strong> <?php echo htmlspecialchars($prizes['T_PRIZE']); ?></p>
             </div>
         </div>
         <div class="description card">
             <h2>Description</h2>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Quisque non lacus hendrerit, bibendum libero id, efficitur dolor. Aliquam erat volutpat. Donec mollis tristique mi, ac ullamcorper justo commodo sed. Cras ultricies malesuada odio, a luctus erat pulvinar sit amet.</p>
-            <p>Integer et lectus quam. Nullam id turpis tincidunt, fermentum arcu in, gravida massa. Donec nec interdum libero. Vivamus in erat sit amet dolor facilisis vestibulum a ut dui. Maecenas auctor, dui at congue commodo, purus erat viverra sem, in suscipit ligula ligula sit amet eros.</p>
+            <p><?php echo htmlspecialchars($description); ?></p>
         </div>
         <div class="register-button">
             <button onclick="registerEvent()">Register</button>
