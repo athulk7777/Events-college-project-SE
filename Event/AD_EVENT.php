@@ -1,9 +1,8 @@
 <?php
 session_start();
 
-// Check if the user is logged in and if the designation is ADMIN
 if (!isset($_SESSION['userid']) || !isset($_SESSION['designation']) || $_SESSION['designation'] !== 'ADMIN') {
-    header('Location: CO-ORD_LOGIN.PHP'); // Redirect to login page if not logged in or not an admin
+    header('Location: CO-ORD_LOGIN.PHP');
     exit();
 }
 
@@ -18,10 +17,8 @@ $service_name = $config['service_name'];
 $oracleUsername = $config['username'];
 $oraclePassword = $config['password'];
 
-// Connection string
 $connStr = "(DESCRIPTION = (ADDRESS = (PROTOCOL = TCP)(HOST = $host)(PORT = $port))(CONNECT_DATA = (SERVICE_NAME = $service_name)))";
 
-// Establish connection
 $connection = oci_connect($oracleUsername, $oraclePassword, $connStr);
 
 if (!$connection) {
@@ -29,7 +26,6 @@ if (!$connection) {
     die("Connection failed: " . $error['message']);
 }
 
-// Handle logout request
 if (isset($_POST['logout'])) {
     session_destroy();
     header('Location: CO-ORD_LOGIN.PHP');
@@ -126,10 +122,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         form.active {
             display: block;
         }
-
-        
-
-
         .btn {
             background-color: white;
             border: none;
@@ -187,8 +179,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </div>
 
     <script>
-        const formCount = 25; // Number of forms
-        var currentFormIndex = 1; // Start from index 1
+        const formCount = 25;
+        var currentFormIndex = 1;
         var formsContainer = document.getElementById('forms-container');
         var forms = document.querySelectorAll('form');
 
@@ -206,7 +198,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             const form = forms[index - 1];
             const formData = new FormData(form);
 
-            // Save data to local storage
             localStorage.setItem(`formData${index}`, JSON.stringify(Object.fromEntries(formData.entries())));
         }
 

@@ -106,6 +106,8 @@ oci_close($connection); // Close the database connection when done
         <div class="button-container">
             <?php if ($designation === 'CO-ORD') { ?>
                 <a href="CO_ORD_EVENT.php" class="button">Manage Event</a>
+                <a href="EVENT_PHOTO.php" class="button">Upload Photo</a>
+                <a href="AD_DESC.php" class="button">Price and Description</a>
                 <a href="MANAGE_VOL.php" class="button">Manage Volunteer</a>
                 <a href="ADD_EXPENSE.php" class="button">Add Expense</a>
                 <a href="CHECK_PROFIT.php" class="button">Check Profit</a>

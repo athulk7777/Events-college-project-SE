@@ -18,6 +18,11 @@ if (!$connection) {
     die("Connection failed: " . $error['message']);
 }
 
+if (!isset($_SESSION['userid'])) {
+    header('Location: user_login.php');
+    exit();
+}
+
 // Get Eid from URL
 if (!isset($_GET['Eid'])) {
     die("Event ID not provided.");

@@ -34,7 +34,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search'])) {
     oci_execute($stmt);
 
     while ($row = oci_fetch_assoc($stmt)) {
+        // Fetch the photo if it exists
+        $eid = $row['EID'];
+        $photoQuery = "SELECT photo FROM event_photos WHERE Eid = :eid";
+        $photoStmt = oci_parse($connection, $photoQuery);
+        oci_bind_by_name($photoStmt, ':eid', $eid);
+        oci_execute($photoStmt);
+        $photoRow = oci_fetch_assoc($photoStmt);
+
+        if ($photoRow && $photoRow['PHOTO']) {
+            $row['PHOTO'] = $photoRow['PHOTO']->load();
+        } else {
+            $row['PHOTO'] = null;
+        }
+
         $searchResults[] = $row;
+
+        oci_free_statement($photoStmt);
     }
 
     oci_free_statement($stmt);
@@ -45,7 +61,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['search'])) {
     oci_execute($stmt);
 
     while ($row = oci_fetch_assoc($stmt)) {
+        // Fetch the photo if it exists
+        $eid = $row['EID'];
+        $photoQuery = "SELECT photo FROM event_photos WHERE Eid = :eid";
+        $photoStmt = oci_parse($connection, $photoQuery);
+        oci_bind_by_name($photoStmt, ':eid', $eid);
+        oci_execute($photoStmt);
+        $photoRow = oci_fetch_assoc($photoStmt);
+
+        if ($photoRow && $photoRow['PHOTO']) {
+            $row['PHOTO'] = $photoRow['PHOTO']->load();
+        } else {
+            $row['PHOTO'] = null;
+        }
+
         $searchResults[] = $row;
+
+        oci_free_statement($photoStmt);
     }
 
     oci_free_statement($stmt);
@@ -62,24 +94,40 @@ oci_close($connection);
     <title>Event Search</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', sans-serif;
             margin: 0;
-            overflow: hidden;
-            background-color: #f4f4f9;
+            padding: 0;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+            overflow-x: hidden;
+            animation: backgroundAnimation 15s infinite alternate;
         }
-        #particles-js {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background-color: #000; /* Ensure background color for visibility */
+
+        @keyframes backgroundAnimation {
+            0% {
+                background: linear-gradient(135deg, #fc1c03 0%, #1916c7 100%);
+            }
+            50% {
+                background: linear-gradient(135deg, #fc1c03 0%, #1916c7 100%);
+            }
+            100% {
+                background: linear-gradient(135deg, #fc1c03 0%, #1916c7 100%);
+            }
         }
+
         .container {
-            position: relative;
+            max-width: 1200px;
+            margin: 50px auto;
             padding: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            color: white;
+            animation: fadeInUp 1s ease-in-out;
         }
+
         .search-container {
-            background: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+            color : white;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -87,13 +135,20 @@ oci_close($connection);
             margin-bottom: 20px;
         }
         .search-container h2 {
-            background-color: #000;
-            color: #fff;
-            margin-bottom: 20px;
+            font-size: 28px;
+            margin: 0;
+            background: -webkit-linear-gradient(#ff9a9e, #fad0c4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border: 2px solid;
+            border-image: linear-gradient(to right, #ff9a9e, #fad0c4) 1;
+            padding: 20px;
+            display: inline-block;
+            animation: fadeInDown 1s ease-in-out;
         }
         .search-container label {
             display: block;
-            color: #000;
+            color: #fff;
             margin-bottom: 5px;
             text-align: left;
         }
@@ -124,20 +179,42 @@ oci_close($connection);
             justify-content: center;
         }
         .event-card {
-            background-color: #000;
+            background-color: rgba(255, 255, 255, 0.1);
             color: #fff;
             padding: 20px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
             margin: 10px;
             width: 300px;
             text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
         .event-card h3 {
-            margin-top: 0;
+            font-size: 28px;
+            margin: 0;
+            margin-bottom: 10px;
+            background: -webkit-linear-gradient(#ff9a9e, #fad0c4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            border: 2px solid;
+            border-image: linear-gradient(to right, #ff9a9e, #fad0c4) 1;
+            padding: 10px;
+            display: inline-block;
+            animation: fadeInDown 1s ease-in-out;
         }
         .event-card p {
-            margin: 5px 0;
+            font-size: 18px;
+            line-height: 1.6;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+        .event-photo {
+            max-width: 100%;
+            max-height: 200px;
+            margin-bottom: 10px;
         }
         .event-card form button {
             background-color: #fff;
@@ -151,10 +228,24 @@ oci_close($connection);
             background-color: #000;
             color: #fff;
         }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
     </style>
 </head>
 <body>
-    <div id="particles-js"></div>
     <div class="container">
         <div class="search-container">
             <h2>Search Events</h2>
@@ -162,122 +253,34 @@ oci_close($connection);
                 <label for="search">Event Name:</label>
                 <input type="text" id="search" name="search" required><br>
                 <button type="submit">Search</button>
-            </form>
-        </div>
-        <div class="results-container">
-        <?php if (!empty($searchResults)): ?>
-    <?php foreach ($searchResults as $event): ?>
-        <div class="event-card">
-            <h3><?php echo htmlspecialchars($event['ENAME']); ?></h3>
-            <p>Entry Fees: <?php echo htmlspecialchars($event['ENTRY_FEES']); ?></p>
-            <p>Type: <?php echo htmlspecialchars($event['ETYPE']); ?></p>
-            <p>Location: <?php echo htmlspecialchars($event['ELOCATION']); ?></p>
-            <p>Date: <?php echo htmlspecialchars($event['EDATE']); ?></p>
-            <p>Time: <?php echo htmlspecialchars($event['ETIME']); ?></p>
-            <p>Slots: <?php echo htmlspecialchars($event['SLOTS']); ?></p>
-            <p>Total Members: <?php echo htmlspecialchars($event['TOTAL_MEMBERS']); ?></p>
-            <form method="get" action="reg_event.php">
-                <input type="hidden" name="Eid" value="<?php echo htmlspecialchars($event['EID']); ?>">
-                <button type="submit">Register</button>
-            </form>
-        </div>
-    <?php endforeach; ?>
-<?php else: ?>
-    <p>No events found.</p>
+</form>
+</div>
+<div class="results-container">
+<?php if (!empty($searchResults)): ?>
+<?php foreach ($searchResults as $event): ?>
+<div class="event-card">
+<h3><?php echo htmlspecialchars($event['ENAME']); ?></h3>
+<?php if ($event['PHOTO']): ?>
+<img src="data:image/jpeg;base64,<?php echo base64_encode($event['PHOTO']); ?>" alt="Event Photo" class="event-photo" />
 <?php endif; ?>
+<p>Entry Fees: <?php echo htmlspecialchars($event['ENTRY_FEES']); ?></p>
+<p>Type: <?php echo htmlspecialchars($event['ETYPE']); ?></p>
+<p>Location: <?php echo htmlspecialchars($event['ELOCATION']); ?></p>
+<p>Date: <?php echo htmlspecialchars($event['EDATE']); ?></p>
+<p>Time: <?php echo htmlspecialchars($event['ETIME']); ?></p>
+<p>Slots: <?php echo htmlspecialchars($event['SLOTS']); ?></p>
+<p>Total Members: <?php echo htmlspecialchars($event['TOTAL_MEMBERS']); ?></p>
+<form method="get" action="reg_event.php">
+<input type="hidden" name="Eid" value="<?php echo htmlspecialchars($event['EID']); ?>">
+<button type="submit">Register</button>
+</form>
+</div>
+<?php endforeach; ?>
+<?php else: ?>
+<p>No events found.</p>
+<?php endif; ?>
+</div>
+</div>
 
-        </div>
-    </div>
-    <script src="js/particles.min.js"></script>
-    <script>
-        particlesJS('particles-js', {
-            "particles": {
-                "number": {
-                    "value": 80,
-                    "density": {
-                        "enable": true,
-                        "value_area": 800
-                    }
-                },
-                "color": {
-                    "value": "#ffffff"
-                },
-                "shape": {
-                    "type": "circle",
-                    "stroke": {
-                        "width": 0,
-                        "color": "#000000"
-                    },
-                    "polygon": {
-                        "nb_sides": 5
-                    }
-                },
-                "opacity": {
-                    "value": 0.5,
-                    "random": false
-                },
-                "size": {
-                    "value": 3,
-                    "random": true
-                },
-                "line_linked": {
-                    "enable": true,
-                    "distance": 150,
-                    "color": "#ffffff",
-                    "opacity": 0.4,
-                    "width": 1
-                },
-                "move": {
-                    "enable": true,
-                    "speed": 6,
-                    "direction": "none",
-                    "random": false,
-                    "straight": false,
-                    "out_mode": "out",
-                    "bounce": false
-                }
-            },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": {
-                    "onhover": {
-                        "enable": true,
-                        "mode": "repulse"
-                    },
-                    "onclick": {
-                        "enable": true,
-                        "mode": "push"
-                    },
-                    "resize": true
-                },
-                "modes": {
-                    "grab": {
-                        "distance": 400,
-                        "line_linked": {
-                            "opacity": 1
-                        }
-                    },
-                    "bubble": {
-                        "distance": 400,
-                        "size": 40,
-                        "duration": 2,
-                        "opacity": 8,
-                        "speed": 3
-                    },
-                    "repulse": {
-                        "distance": 200,
-                        "duration": 0.4
-                    },
-                    "push": {
-                        "particles_nb": 4
-                    },
-                    "remove": {
-                        "particles_nb": 2
-                    }
-                }
-            },
-            "retina_detect": true
-        });
-    </script>
 </body>
 </html>
